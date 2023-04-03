@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Form</title>
+</head>
+<body>
+
+  <form>
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username"><br><br>
+    <label for="userid">UserID:</label>
+    <input type="text" id="userid" name="userid"><br><br>
+    <label for="price">Price:</label>
+    <input type="text" id="price" name="price"><br><br>
+    <input type="button" value="Send" onclick="sendData()"><br><br>
+  </form>
+
+  <form>
+    <label for="userid2">UserID:</label>
+    <input type="text" id="userid2" name="userid"><br><br>
+    <input type="button" value="Get Purchases" onclick="getPurchases2()">
+  </form>
+
+  <div id="output"></div>
+
+  <script>
+    function sendData() {
+      var username = document.getElementById("username").value;
+      var userid = document.getElementById("userid").value;
+      var price = document.getElementById("price").value;
+      var data = { "username": username, "userid": userid, "price": price };
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/produce", true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          console.log(xhr.responseText);
+        }
+      };
+      xhr.send(JSON.stringify(data));
+    }
+
+    function getPurchases2() {
+      var userid = document.getElementById("userid2").value;
+      var xhr = new XMLHttpRequest();
+      var url = "/purchases/" + userid;
+      xhr.open("GET", url, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var purchases = JSON.parse(xhr.responseText);
+          var output = document.getElementById("output");
+          output.innerHTML = "";
+          for (var i = 0; i < purchases.length; i++) {
+            output.innerHTML += "<p>" + purchases[i].username + " bought " + purchases[i].product + " for $" + purchases[i].price + "</p>";
+          }
+        }
+      };
+      xhr.send();
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send message to Kafka</title>
+</head>
+<body>
+    <h1>Send message to Kafka</h1>
+    <form>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username"><br><br>
+        <label for="userid">User ID:</label>
+        <input type="text" id="userid" name="userid"><br><br>
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price"><br><br>
+        <button type="button" onclick="sendMessage()">Send Message</button>
+    </form>
+    <script>
+        function sendMessage() {
+            var xhr = new XMLHttpRequest();
+            var url = 'http://localhost:5000/produce';
+            var params = 'username=' + document.getElementById('username').value
+                        + '&userid=' + document.getElementById('userid').value
+                        + '&price=' + document.getElementById('price').value;
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    alert(xhr.responseText);
+                }
+            };
+            xhr.send(params);
+        }
+    </script>
+</body>
+</html>
